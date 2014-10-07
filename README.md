@@ -1,7 +1,7 @@
 PyGetBlizSecret
 ===============
 
-Get your secret from blizzard. For use with authenticators
+Hacked together python to get your secret from blizzard. For use with authenticators
 
 
 Usage
