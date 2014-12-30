@@ -64,8 +64,7 @@ def normalizeSerial(serial):
 
 def restore(serial, code):
 	serial = normalizeSerial(serial)
-	host = ENROLL_HOSTS[serial[0:2]]
-	print host
+	host = ENROLL_HOSTS[serial[0:2]] || ENROLL_HOSTS["default"]
 	if len(code) != 10:
 		raise ValueError("invalid restore code (should be 10 bytes): %r" % (code))
 
