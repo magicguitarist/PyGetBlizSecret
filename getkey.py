@@ -64,10 +64,12 @@ def normalizeSerial(serial):
 
 def restore(serial, code):
 	serial = normalizeSerial(serial)
+	host = ENROLL_HOSTS[serial[0:2]]
+	print host
 	if len(code) != 10:
 		raise ValueError("invalid restore code (should be 10 bytes): %r" % (code))
 
-	challenge = initiatePaperRestore(serial)
+	challenge = initiatePaperRestore(serial, host)
 	if len(challenge) != 32:
 		raise HTTPError("Invalid challenge length (expected 32, got %i)" % (len(challenge)))
 
@@ -76,7 +78,7 @@ def restore(serial, code):
 
 	otp = getOneTimePad(20)
 	e = encrypt(hash + otp)
-	response = validatePaperRestore(serial + e)
+	response = validatePaperRestore(serial + e, host)
 	secret = decrypt(response, otp)
 
 	return secret
@@ -129,24 +131,5 @@ def decrypt(response, otp):
 
 		ret.append(c ^ e)
 	return ret
-
-def restore(serial, code):
-	serial = normalizeSerial(serial)
-	if len(code) != 10:
-		raise ValueError("invalid restore code (should be 10 bytes): %r" % (code))
-
-	challenge = initiatePaperRestore(serial)
-	if len(challenge) != 32:
-		raise HTTPError("Invalid challenge length (expected 32, got %i)" % (len(challenge)))
-
-	code = restoreCodeToBytes(normalizeSerial(code))
-	hash = hmac.new(code, serial.encode() + challenge, digestmod=sha1).digest()
-
-	otp = getOneTimePad(20)
-	e = encrypt(hash + otp)
-	response = validatePaperRestore(serial + e)
-	secret = decrypt(response, otp)
-
-	return secret
 
 print base64.b32encode(restore(sys.argv[1], sys.argv[2]))
