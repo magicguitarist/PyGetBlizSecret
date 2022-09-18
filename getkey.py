@@ -1,3 +1,4 @@
+from distutils.command.install_lib import PYTHON_SOURCE_EXTENSION
 import sys
 import hmac
 import binascii
@@ -18,7 +19,8 @@ ENROLL_HOSTS = {
 	"EU": "mobile-service.blizzard.com",
 	"US": "mobile-service.blizzard.com",
 	"default": "mobile-service.blizzard.com",
-}
+}PYTHON_SOURCE_EXTENSION getkey.py <serial> <restore code>
+
 
 def getServerResponse(data, host, path):
 	conn = HTTPConnection(host)
